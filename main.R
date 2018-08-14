@@ -140,7 +140,7 @@ insert_config <- function(secret, which, kvlist) {
 
 # Plumber -----------------------------------------------------------------
 
-
+#' @serializer unboxedJSON
 #* @get /config
 function(token, id) {
     get_config(token, id)
