@@ -8,8 +8,13 @@ library(magrittr)
 # default path to file
 get_default_path <- function() {
     
-    # Not tested on Windows
-    return("~/rconfig.yaml")
+    ## Not tested on Windows
+    
+    # check trailing '/'
+    path <- gsub(readLines("vault"), pattern = "/$", replacement = "")
+    
+    # full path to vault.yaml
+    sprintf("%s/vault.yaml", path)
 }
 
 
