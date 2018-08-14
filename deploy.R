@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript --vanilla
 
-library(argparser)
+library(argparser, quietly = TRUE)
 library(yaml)
 
 p <- arg_parser(description = "A bare bone configuration management for quick and dirty development purposes.")
@@ -22,7 +22,7 @@ v <- new.env()
 if(is.na(argvs$path)) {
     v$path <- "~/.bbcfg"
 } else {
-    v$path <- argvs$path
+    v$path <- gsub(argvs$path, pattern = "/$", replacement = "")
 }
 
 # create vault
@@ -31,7 +31,7 @@ if(!dir.exists(v$path)) {
 }
 
 # path to vault yaml
-v$vault <- sprintf("%s/vault.yaml.cpt", v$path)
+v$vault <- sprintf("%s/vault.yaml", v$path)
 
 # either make one or read one from user
 if(is.na(argvs$file)) {
@@ -64,24 +64,30 @@ write_into_vault <- function(config, vault, secret) {
     return(1)
 }
 
-# file exists?
-if(!file.exists(v$vault)) {
+# vault exists?
+if(!file.exists(paste0(v$vault, ".cpt"))) {
+    
     tryCatch(file.create(v$vault), finally = message("Initiate new vault."))
     status <- write_into_vault(v$config, v$vault, argvs$secret)
     msg <- ifelse(status == 1, "Success!", "Failed: Action cannot be completed.")
-    message(msg)
+    
 } else {
 
-    # check if override is permitted
+    # check if overriden is permitted
     if(argvs$force) {
-        tryCatch(file.remove(v$vault), finally = message("Remove existing vault."))
+        
+        tryCatch(file.remove(paste0(v$vault, ".cpt")), finally = message("Remove existing vault."))
         tryCatch(file.create(v$vault), finally = message("Initiate new vault."))
         status <- write_into_vault(v$config, v$vault, argvs$secret)
         msg <- ifelse(status == 1, "Success!", "Failed: Action cannot be completed.")
-        message(msg)
+        
     } else {
-        message(sprintf("Vault has been initiated at %s.\nUse --force to start anew.", v$path))
+        
+        # overriden is not permitted
+        msg <- sprintf("Vault has been initiated at %s.\nUse --force to start anew.", v$path)
     }
 }
 
+# ends here
+message(msg)
 
