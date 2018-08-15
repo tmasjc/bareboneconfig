@@ -36,15 +36,13 @@ v$vault <- sprintf("%s/vault.yaml", v$path)
 # either make one or read one from user
 if(is.na(argvs$file)) {
     # a dummy config to kickstart
-    v$config <- as.yaml(
-        list(
-            DummyOne = list(
+    v$config <- list(
+            Dummy.One = list(
                 user = "admin",
                 password = "HelloWorld2018",
                 host = "somewhere",
                 port = "someport")
         )
-    )
 } else {
     # read from specify config file
     v$config <- read_yaml(argvs$file)
@@ -76,6 +74,7 @@ if(!file.exists(paste0(v$vault, ".cpt"))) {
     # check if overriden is permitted
     if(argvs$force) {
         
+        # remove existing vault
         tryCatch(file.remove(paste0(v$vault, ".cpt")), finally = message("Remove existing vault."))
         tryCatch(file.create(v$vault), finally = message("Initiate new vault."))
         status <- write_into_vault(v$config, v$vault, argvs$secret)
