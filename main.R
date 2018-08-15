@@ -3,15 +3,13 @@ library(plumber)
 library(purrr)
 library(magrittr)
 
-
-
 # default path to file
 get_default_path <- function() {
     
     ## Not tested on Windows
     
     # check trailing '/'
-    path <- gsub(readLines("vault"), pattern = "/$", replacement = "")
+    path <- gsub(readLines("init"), pattern = "/$", replacement = "")
     
     # full path to vault.yaml
     sprintf("%s/vault.yaml", path)
@@ -148,16 +146,19 @@ insert_config <- function(secret, which, kvlist) {
 #' @serializer unboxedJSON
 #* @get /config
 function(token, id) {
+    message(sprintf("Retrieve key from %s", id))
     get_config(token, id)
 }
 
 #* @post /update
 function(token, id, key, value) {
+    message(sprintf("Update %s from %s", key, id))
     mod_config(token, id, key, value)
 }
 
 #* @get /delete
 function(token, id, key) {
+    message(sprintf("Drop %s from %s", key, id))
     drop_key(token, id, key)
 }
 
@@ -165,6 +166,7 @@ function(token, id, key) {
 function(req, token, id) {
     
     #browser()
+    message(sprintf("Add new id", id))
     
     # parse request body
     zz <- strsplit(req$postBody, split = "&") %>% 

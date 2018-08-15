@@ -1,7 +1,7 @@
 library(plumber)
 
 # check trailing '/'
-path <- gsub(readLines("vault"), pattern = "/$", replacement = "")
+path <- gsub(readLines("init"), pattern = "/$", replacement = "")
 
 # full path to vault.yaml
 path <- sprintf("%s/vault.yaml.cpt", path)
