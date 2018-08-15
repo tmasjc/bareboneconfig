@@ -1,6 +1,5 @@
 library(yaml)
 library(plumber)
-library(purrr)
 library(magrittr)
 
 # default path to file
@@ -170,7 +169,7 @@ function(req, token, id) {
     
     # parse request body
     zz <- strsplit(req$postBody, split = "&") %>% 
-        flatten() %>% 
+        unlist() %>% 
         lapply(FUN = strsplit, split = "=") %>% 
         lapply(unlist)
     
