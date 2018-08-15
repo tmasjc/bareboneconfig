@@ -7,7 +7,7 @@ path <- gsub(readLines("init"), pattern = "/$", replacement = "")
 path <- sprintf("%s/vault.yaml.cpt", path)
 
 if(!file.exists(path)) {
-    stop("Vault not found. Have you run `init_bbcfg`?")
+    stop("Vault not found. Have you run `./deploy.R`?")
 }
 
 r <- plumb("main.R")
